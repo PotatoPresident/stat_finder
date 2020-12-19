@@ -2,7 +2,7 @@ use std::io;
 use std::collections::HashMap;
 
 fn main() {
-    loop {
+    'logic: loop {
         println!("Enter data set");
 
         let mut input = String::new();
@@ -11,10 +11,17 @@ fn main() {
             .read_line(&mut input)
             .expect("Failed to read input");
 
+        if input.trim().is_empty() {
+            continue;
+        }
+
         let mut data_set = Vec::new();
 
         for word in input.split_whitespace() {
-            let word: i32 = word.trim().parse().expect("Invalid input");
+            let word: i32 = match word.trim().parse() {
+                Ok(num) => num,
+                Err(_) => continue 'logic
+            };
             data_set.push(word);
         }
 
@@ -24,6 +31,7 @@ fn main() {
         println!("Range: {}", range(&data_set));
         println!("MAD: {}", mad(&data_set));
         println!("Standard Deviation: {}", std_dev(&data_set));
+        println!();
     }
 }
 
